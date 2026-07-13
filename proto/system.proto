@@ -8,7 +8,8 @@ service UserGroupService {
   rpc SetUserGroup (UserGroupSetRequest) returns (UserGroupResponse);
   rpc GetUserGroupList (UserGroupListRequest) returns (UserGroupListResponse);
   rpc GetUserGroupCount (UserGroupListRequest) returns (UserGroupCountResponse);
-  rpc DeleteUserGroup (UserGroupRequest) returns (UserGroupDeleteResponse);
+  rpc DeleteUserGroupById (UserGroupRequest) returns (UserGroupDeleteResponse);
+  rpc DeleteUserGroupByCode (UserGroupRequest) returns (UserGroupDeleteResponse);
 }
 service UserService {
   rpc GetUserById (UserRequest) returns (UserResponse);

@@ -100,13 +100,11 @@ impl user_group_service_server::UserGroupService for MyUserGroup {
     ) -> Result<Response<UserGroupResponse>, Status> {
         let req = request.into_inner();
 
-        Ok(Response::new(UserGroupResponse {
-            id: req.id,
-            yug_code: req.yug_code,
-            yug_name: req.yug_name,
-            yug_memo: req.yug_memo,
-            yug_active: req.yug_active,
-        }))
+        let yug = repo_system::set_usergroup(req.into())
+            .await
+            .map_err(|e| map_repo_error(e, "set_user_group"))?;
+
+        Ok(Response::new(yug.into()))
     }
 
     async fn add_user_group(
@@ -114,14 +112,11 @@ impl user_group_service_server::UserGroupService for MyUserGroup {
         request: Request<UserGroupAddRequest>,
     ) -> Result<Response<UserGroupResponse>, Status> {
         let req = request.into_inner();
+        let yug = repo_system::add_usergroup(req.into())
+            .await
+            .map_err(|e| map_repo_error(e, "add_user_group"))?;
 
-        Ok(Response::new(UserGroupResponse {
-            id: 1,
-            yug_code: req.yug_code,
-            yug_name: req.yug_name,
-            yug_memo: req.yug_memo,
-            yug_active: req.yug_active,
-        }))
+        Ok(Response::new(yug.into()))
     }
 
     async fn get_user_group_count(
@@ -136,10 +131,24 @@ impl user_group_service_server::UserGroupService for MyUserGroup {
         Ok(Response::new(UserGroupCountResponse { count }))
     }
 
-    async fn delete_user_group(
+    async fn delete_user_group_by_id(
         &self,
         _request: Request<UserGroupRequest>,
     ) -> Result<Response<UserGroupDeleteResponse>, Status> {
+        let req = _request.into_inner();
+        let _ = repo_system::delete_usergroup_by_id(req.id)
+            .await
+            .map_err(|e| map_repo_error(e, "delete_user_group_by_id"));
+        Ok(Response::new(UserGroupDeleteResponse { success: true }))
+    }
+    async fn delete_user_group_by_code(
+        &self,
+        _request: Request<UserGroupRequest>,
+    ) -> Result<Response<UserGroupDeleteResponse>, Status> {
+        let req = _request.into_inner();
+        let _ = repo_system::delete_usergroup_by_code(&req.yug_code)
+            .await
+            .map_err(|e| map_repo_error(e, "delete_user_group_by_code"));
         Ok(Response::new(UserGroupDeleteResponse { success: true }))
     }
 }

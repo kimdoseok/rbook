@@ -9,6 +9,75 @@ pub struct UserGroup {
     pub yug_active: bool,
 }
 
+impl From<crate::serv_system::proto::UserGroupAddRequest> for UserGroup {
+    fn from(req: crate::serv_system::proto::UserGroupAddRequest) -> Self {
+        Self {
+            id: 0,
+            yug_code: req.yug_code,
+            yug_name: req.yug_name,
+            yug_memo: req.yug_memo,
+            yug_active: req.yug_active,
+        }
+    }
+}
+
+impl From<crate::serv_system::proto::UserGroupSetRequest> for UserGroup {
+    fn from(req: crate::serv_system::proto::UserGroupSetRequest) -> Self {
+        Self {
+            id: req.id,
+            yug_code: req.yug_code,
+            yug_name: req.yug_name,
+            yug_memo: req.yug_memo,
+            yug_active: req.yug_active,
+        }
+    }
+}
+
+impl From<crate::serv_system::proto::UserGroupResponse> for UserGroup {
+    fn from(resp: crate::serv_system::proto::UserGroupResponse) -> Self {
+        UserGroup {
+            id: resp.id,
+            yug_code: resp.yug_code,
+            yug_name: resp.yug_name,
+            yug_memo: resp.yug_memo,
+            yug_active: resp.yug_active,
+        }
+    }
+}
+
+impl From<UserGroup> for crate::serv_system::proto::UserGroupAddRequest {
+    fn from(yug: UserGroup) -> Self {
+        crate::serv_system::proto::UserGroupAddRequest {
+            yug_code: yug.yug_code,
+            yug_name: yug.yug_name,
+            yug_memo: yug.yug_memo,
+            yug_active: yug.yug_active,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::serv_system::proto::UserGroupAddRequest;
+
+    #[test]
+    fn converts_add_request_to_user_group_model() {
+        let req = UserGroupAddRequest {
+            yug_code: "TEST".into(),
+            yug_name: "Test Group".into(),
+            yug_memo: "memo".into(),
+            yug_active: true,
+        };
+
+        let model: UserGroup = req.into();
+        assert_eq!(model.yug_code, "TEST");
+        assert_eq!(model.yug_name, "Test Group");
+        assert_eq!(model.yug_memo, "memo");
+        assert!(model.yug_active);
+    }
+}
+
 pub async fn add_usergroup(yug: UserGroup) -> sqlx::Result<UserGroup> {
     let state = repository::get_state().await?;
     let usergroup = sqlx::query_as::<_, UserGroup>(

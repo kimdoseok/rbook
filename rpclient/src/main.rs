@@ -55,6 +55,18 @@ impl From<system::UserGroupResponse> for UserGroup {
     }
 }
 
+impl From<UserGroup> for system::UserGroupResponse {
+    fn from(yug: UserGroup) -> Self {
+        system::UserGroupResponse {
+            id: yug.id,
+            yug_code: yug.yug_code,
+            yug_name: yug.yug_name,
+            yug_memo: yug.yug_memo,
+            yug_active: yug.yug_active,
+        }
+    }
+}
+
 impl From<UserGroup> for system::UserGroupAddRequest {
     fn from(yug: UserGroup) -> Self {
         system::UserGroupAddRequest {
@@ -125,7 +137,7 @@ async fn get_user_group_by_id(
     id: i64,
 ) -> system::UserGroupResponse {
     let request = tonic::Request::new(system::UserGroupRequest { id, yug_code: String::new() });
-    client.get_user_group_by_id(request).await.unwrap().into_inner()
+    client.get_user_group_by_code(request).await.unwrap().into_inner()
 }
 async fn get_user_group_by_code(
     client: &mut UserGroupServiceClient<tonic::transport::Channel>,
@@ -178,7 +190,7 @@ async fn delete_user_group_by_id(
         id,
         yug_code: String::new(),
     });
-    client.delete_user_group(request).await.unwrap().into_inner()
+    client.delete_user_group_by_id(request).await.unwrap().into_inner()
 }
 async fn delete_user_group_by_code(
     client: &mut UserGroupServiceClient<tonic::transport::Channel>,
@@ -188,7 +200,7 @@ async fn delete_user_group_by_code(
         id: 0,
         yug_code: yug_code.into(),
     });
-    client.delete_user_group(request).await.unwrap().into_inner()
+    client.delete_user_group_by_code(request).await.unwrap().into_inner()
 }
 
 
@@ -222,8 +234,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         yug_active: true,
     };
     let mut id: i64 = 1;
+    let mut yug_code: String = "ADMINS".to_string();
     println!("=1===============================");
-    let response2 = get_user_group_by_id(&mut user_group_client, id).await;
+    let response2 = get_user_group_by_code(&mut user_group_client, &yug_code).await;
+    let response2 = response2.unwrap();
     println!("RESPONSE2={:?}", &response2);
     println!("Name={:?}", &response2.yug_name);
     println!("=2===============================");
@@ -231,9 +245,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     println!("RESPONSE6={:?}", response3);
     println!("=3===============================");
     // Map the generated protobuf message to your custom struct
-    let usergroup_struct: UserGroup = response2.into();
-    println!("Mapped User: {:?}", usergroup_struct);
+    let usergroup1: UserGroup = response2.into();
+    println!("Mapped User: {:?}", usergroup1);
     println!("=4===============================");
+    let result = delete_user_group_by_code(&mut user_group_client, &yug.yug_code).await;
+    println!("User group deleted by code: {} {:?}", yug.yug_code, result);
+    println!("=5===============================");
 
     let yug = UserGroup {
         id: 0,
@@ -249,7 +266,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("User group by code: {} {:?}", &yug_response.yug_code, &yug_response);
             print_type_of(&yug_response);
             println!("{:?}", &yug_response);
-            println!("=5===============================");
+            println!("=6===============================");
             if yug_response.id > 0 {
                 let result = delete_user_group_by_id(&mut user_group_client, yug_response.id).await;
                 println!("User group deleted by ID: {} {:?}", yug_response.id, result);
@@ -261,28 +278,36 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("get_user_group_by_code failed: {status:?}");
         }
     }
+    let yug = UserGroup {
+        id: 0,
+        yug_code: "TEST".to_string(),
+        yug_name: "Test Group".to_string(),
+        yug_memo: "This is a test user group".to_string(),
+        yug_active: true,
+    };
+
     let yug = add_user_group(&mut user_group_client, yug).await;
     println!("User group added: {:?}", &yug);
-    println!("=6===============================");
+    println!("=7===============================");
     let yugs = get_user_group_list(&mut user_group_client, filter).await;
     for yug in &yugs.usergroups {
         println!("Yug List {}: {:?}", yug.id, yug);
     }
     let yug_count = get_user_group_count(&mut user_group_client, filter).await;
     println!("User group count: {}", yug_count.count);
-    println!("=7===============================");
+    println!("=8===============================");
     match get_user_group_by_code(&mut user_group_client, "TEST").await {
         Ok(yug) => {
             println!("User group by code: {} {:?}", yug.yug_code, &yug);
-            println!("=8===============================");
+            println!("=9===============================");
             let mut yug: UserGroup = yug.into();
             yug.yug_memo = "Updated memo".to_string();
             let yug = set_user_group(&mut user_group_client, yug).await;
             println!("User group updated: {} {:?}", yug.yug_code, &yug);
-            println!("=9===============================");
+            println!("=10===============================");
             let yug = get_user_group_by_id(&mut user_group_client, yug.id).await;
             println!("User group by ID: {} {:?}", yug.id, yug);
-            println!("=10===============================");
+            println!("=11===============================");
             let result = delete_user_group_by_id(&mut user_group_client, yug.id).await;
             println!("User group deleted by ID: {} {:?}", yug.id, result);
         }
@@ -291,6 +316,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    println!("=12===============================");
+    let yugs = get_user_group_list(&mut user_group_client, "").await;
+    for yug in &yugs.usergroups {
+        println!("Yug List {}: {:?}", yug.id, yug);
+    }
 
     Ok(())
 }
