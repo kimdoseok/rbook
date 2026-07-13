@@ -1,0 +1,67 @@
+syntax = "proto3";
+package system;
+
+service UserGroupService {
+  rpc GetUserGroupById (UserGroupRequest) returns (UserGroupResponse);
+  rpc GetUserGroupByCode (UserGroupRequest) returns (UserGroupResponse);
+  rpc AddUserGroup (UserGroupAddRequest) returns (UserGroupResponse);
+  rpc SetUserGroup (UserGroupSetRequest) returns (UserGroupResponse);
+  rpc GetUserGroupList (UserGroupListRequest) returns (UserGroupListResponse);
+  rpc GetUserGroupCount (UserGroupListRequest) returns (UserGroupCountResponse);
+  rpc DeleteUserGroup (UserGroupRequest) returns (UserGroupDeleteResponse);
+}
+service UserService {
+  rpc GetUserById (UserRequest) returns (UserResponse);
+  rpc GetUserByCode (UserRequest) returns (UserResponse);
+  rpc AddUser (UserAddRequest) returns (UserResponse);
+  rpc SetUser (UserSetRequest) returns (UserResponse);
+  rpc GetUserList (UserListRequest) returns (UserListResponse);
+  rpc GetUserCount (UserListRequest) returns (UserCountResponse);
+  rpc DeleteUser (UserRequest) returns (UserDeleteResponse);
+}
+
+message UserGroupRequest { 
+  int64 id = 1; 
+  string yug_code = 2; 
+}
+message UserGroupAddRequest { 
+  string yug_code = 1; 
+  string yug_name = 2; 
+  string yug_memo = 3; 
+  bool yug_active = 4; 
+}
+message UserGroupSetRequest { 
+  int64 id = 1; 
+  string yug_code = 2; 
+  string yug_name = 3; 
+  string yug_memo = 4; 
+  bool yug_active = 5; 
+}
+message UserGroupListRequest { 
+  string filter = 1; 
+}
+message UserGroupResponse { 
+  int64 id = 1; 
+  string yug_code = 2; 
+  string yug_name = 3; 
+  string yug_memo = 4; 
+  bool yug_active = 5; 
+}
+message UserGroupListResponse { 
+  repeated UserGroupResponse usergroups = 1; 
+}
+message UserGroupCountResponse { 
+  int64 count = 1; 
+}
+message UserGroupDeleteResponse { 
+  bool success = 1; 
+}
+
+message UserRequest { int64 id = 1; string yus_code = 2; }
+message UserAddRequest { string name = 1; string email = 2; }
+message UserSetRequest { int64 id = 1; string name = 2; string email = 3; }
+message UserListRequest { string filter = 1; }
+message UserResponse { int64 id = 1; string name = 2; string email = 3; }
+message UserListResponse { repeated UserResponse users = 1; }
+message UserCountResponse { int64 count = 1; }
+message UserDeleteResponse { bool success = 1; }

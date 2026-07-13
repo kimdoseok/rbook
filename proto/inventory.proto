@@ -1,0 +1,38 @@
+syntax = "proto3";
+package inventory;
+
+service ItemService {
+  rpc GetItem (ItemRequest) returns (ItemResponse);
+  rpc AddItem (ItemAddRequest) returns (ItemResponse);
+  rpc SetItem (ItemSetRequest) returns (ItemResponse);
+  rpc GetItemList (ItemListRequest) returns (ItemListResponse);
+  rpc GetItemCount (ItemListRequest) returns (ItemCountResponse);
+  rpc DeleteItem (ItemRequest) returns (ItemDeleteResponse);
+}
+
+service WarehouseService {
+  rpc GetWarehouse (WarehouseRequest) returns (WarehouseResponse);
+  rpc AddWarehouse (WarehouseAddRequest) returns (WarehouseResponse);
+  rpc SetWarehouse (WarehouseSetRequest) returns (WarehouseResponse);
+  rpc GetWarehouseList (WarehouseListRequest) returns (WarehouseListResponse);
+  rpc GetWarehouseCount (WarehouseListRequest) returns (WarehouseCountResponse);
+  rpc DeleteWarehouse (WarehouseRequest) returns (WarehouseDeleteResponse);
+}
+
+message ItemRequest { int64 id = 1; }
+message ItemAddRequest { string name = 1; string description = 2; double price = 3; }
+message ItemSetRequest { int64 id = 1; string name = 2; string description = 3; double price = 4; }
+message ItemListRequest { string filter = 1; }
+message ItemResponse { int64 id = 1; string name = 2; string description = 3; double price = 4; }
+message ItemListResponse { repeated ItemResponse items = 1; }
+message ItemCountResponse { int64 count = 1; }
+message ItemDeleteResponse { bool success = 1; }
+
+message WarehouseRequest { int64 id = 1; }
+message WarehouseAddRequest { string name = 1; string location = 2; }
+message WarehouseSetRequest { int64 id = 1; string name = 2; string location = 3; }
+message WarehouseListRequest { string filter = 1; }
+message WarehouseResponse { int64 id = 1; string name = 2; string location = 3; }
+message WarehouseListResponse { repeated WarehouseResponse warehouses = 1; }
+message WarehouseCountResponse { int64 count = 1; }
+message WarehouseDeleteResponse { bool success = 1; }

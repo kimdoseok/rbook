@@ -1,0 +1,19 @@
+rbook
+Copyright (c) 2026 Madang Business Solutions LLC.
+
+This product includes software developed by Madang Business Solutions LLC.
+
+This product includes third-party components licensed under the
+Apache License 2.0 and MIT License. Attribution for these components
+is provided through their respective LICENSE files within the source tree.
+
+Notable third-party components include:
+- Yew (MIT / Apache-2.0)
+- Tonic (MIT / Apache-2.0)
+- Tokio (MIT / Apache-2.0)
+- Hyper (MIT / Apache-2.0)
+- Serde (MIT / Apache-2.0)
+- Prost (Apache-2.0)
+
+The contents of this NOTICE file are for informational purposes only
+and do not modify the Apache License 2.0.

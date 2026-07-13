@@ -1,0 +1,63 @@
+# ================================
+# cargo-deny License Policy
+# Rust Yew + gRPC (Doseok)
+# ================================
+
+[licenses]
+# 허용 라이선스 목록 (Permissive)
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-2-Clause",
+    "BSD-3-Clause"
+]
+
+# 경고만 발생시키는 라이선스 (Weak Copyleft)
+# → 기업 배포에서는 대부분 허용되지만, 주의 필요
+warn = [
+    "MPL-2.0",
+    "EPL-2.0"
+]
+
+# 금지 라이선스 (Strong Copyleft)
+# → SaaS 제공 시 소스 공개 의무 발생 가능
+deny = [
+    "GPL-2.0",
+    "GPL-3.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+    "AGPL-3.0"
+]
+
+# 라이선스가 명확하지 않은 crate 처리
+unlicensed = "deny"
+
+# 각 crate의 라이선스가 여러 개일 때 처리 방식
+# → 하나라도 허용 목록에 있으면 OK
+allow-osi-fsf-free = "both"
+
+# SPDX 식별자 검증
+confidence-threshold = 0.8
+
+# =================================
+# Banned crates (직접 차단)
+# =================================
+[bans]
+# GPL/AGPL 계열 crate가 들어오면 즉시 차단
+deny = [
+    { name = "gpl", reason = "GPL license not allowed" },
+    { name = "agpl", reason = "AGPL license not allowed" }
+]
+
+# 특정 버전 차단 가능 (예시)
+# deny = [
+#     { name = "some-crate", version = "<1.2.0", reason = "Vulnerable version" }
+# ]
+
+# =================================
+# Sources (registry, git, path)
+# =================================
+[sources]
+allow-git = false
+allow-path = true
+allow-registry = true

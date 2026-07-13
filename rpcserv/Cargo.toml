@@ -1,0 +1,17 @@
+[package]
+name = "rpcserv"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+tonic = "0.14.6" # Check for the latest stable version
+tokio = { version = "1.52.3", features = ["macros", "rt-multi-thread"] }
+prost = "0.14.4"
+tonic-prost = "0.14.6"
+sqlx = { version = "0.9.0", features = ["runtime-tokio", "postgres"] }
+dotenvy = "0.15.0"
+chrono = "0.4.19"
+
+[build-dependencies]
+tonic-prost-build = "0.14.6"
+protoc-bin-vendored = "3.2.0"
