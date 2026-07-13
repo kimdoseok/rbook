@@ -1,0 +1,40 @@
+# Compiled Rust artifacts (Cargo)
+/target
+**/*.rs.bk
+
+# Cargo lockfile
+# (Commit this for binaries, but you can ignore it if you are writing a library)
+# Cargo.lock
+
+# Executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Debug information
+*.pdb
+
+# Rust mutation testing
+**/mutants.out*/
+
+# Compiler crash reports
+rustc-ice-*.txt
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.rs.user
+*.suo
+*.sln
+
+# OS-generated files
+.DS_Store
+Thumbs.db
+
+# Docker specific files
+# (Add these if your Docker build steps generate temporary artifacts locally)
+.dockerignore
+#Dockerfile
+#docker-compose.yml
+storage/
