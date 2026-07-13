@@ -66,7 +66,7 @@ impl user_group_service_server::UserGroupService for MyUserGroup {
         request: Request<UserGroupRequest>,
     ) -> Result<Response<UserGroupResponse>, Status> {
         let req = request.into_inner();
-        println!("get_user_group_by_code: req.yug_code = {}", req.yug_code);
+        //println!("get_user_group_by_code: req.yug_code = {}", req.yug_code);
         let yug = repo_system::get_usergroup_by_code(&req.yug_code)
             .await
             .map_err(|e| map_repo_error(e, "get_user_group_by_code"))?;
