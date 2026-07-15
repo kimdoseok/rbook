@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
-PROJECT_NAME="rust-yew-grpc-app"
+PROJECT_NAME="rbook"
 YEAR="2026"
-AUTHOR="Doseok"
+AUTHOR="Madang Business Solutions LLC"
 
 OUTPUT="NOTICE"
 

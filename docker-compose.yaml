@@ -38,4 +38,3 @@ services:
       - postgresdb # Ensure PostgreSQL starts before pgAdmin
     volumes:
       - ./storage/pgadmin:/var/lib/pgadmin
-

@@ -26,6 +26,19 @@ services:
       # copy the sql script to create tables
       - ./postgres/entrypoint:/docker-entrypoint-initdb.d
 
+  pgadmin:
+    image: dpage/pgadmin4:latest # Use the official pgAdmin 4 image
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${DB_PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${DB_PGADMIN_PASSWORD}
+    ports:
+      - "8080:80" # Expose pgAdmin on port 8080 of the host
+    depends_on:
+      - postgresdb # Ensure PostgreSQL starts before pgAdmin
+    volumes:
+      - ./storage/pgadmin:/var/lib/pgadmin
+
   grpc-service:
     container_name: grpc-service
     restart: always
